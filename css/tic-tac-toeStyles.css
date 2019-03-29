@@ -1,0 +1,61 @@
+body {
+    background-color: brown;
+}
+
+.header {
+    text-align: center;
+    color: teal;
+    font-style: italic;
+}
+
+.emptyButtonX {
+    background-color: white;
+    width: 280px;
+    height: 280px;
+    border: none;
+}
+
+.emptyButtonX:hover {
+    background-color: white;
+    border: none;
+    width: 280px;
+    height: 280px;
+    background: url("../img/white_background_x.jpg") no-repeat center center white;
+}
+
+.emptyButtonY {
+    background-color: white;
+    width: 280px;
+    height: 280px;
+    border: none;
+}
+
+.emptyButtonY:hover {
+    background-color: white;
+    border: none;
+    width: 280px;
+    height: 280px;
+    background: url("../img/white_background_o.png") no-repeat center center white;
+}
+
+.xButton {
+    background-color: white;
+    width: 280px;
+    height: 280px;
+    border: none;
+    background: url("../img/white_background_x.jpg") no-repeat center center white;
+}
+
+.oButton {
+    background-color: white;
+    width: 280px;
+    height: 280px;
+    border: none;
+    background: url("../img/white_background_o.png") no-repeat center center white;
+}
+
+.X {
+    font-size: 40px;
+    line-height: 40px;
+    text-align: justify;
+}
