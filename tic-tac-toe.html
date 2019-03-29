@@ -8,10 +8,38 @@
     
     <body>
         <div>
-            <h1 class="header">Tic-Tac-Toe</h1>
+            <h1 class="header" id="header">Tic-Tac-Toe</h1>
+            <script src="scripts/vue.js"></script>
         </div>
-        <button class="emptyButtonX" type="button" onclick=changeButtonToX() id="emptyButton"></button>
-        <button class="emptyButtonX" type="button" onclick=changeButtonToX() id="emptyButton"><img src="img/white_background_o.png"></button>
+        
+        <div class="playingField">
+            <div class="row">
+                <div class="emptySquare" onclick="move(1)" id="empty1"></div>
+                <div class="line"></div>
+                <div class="emptySquare" onclick="move(2)" id="empty2"></div>
+                <div class="line"></div>
+                <div class="emptySquare" onclick="move(3)" id="empty3"></div>
+            </div>
+
+            <div class="horizontalLine"></div>
+
+            <div class="row">
+                <div class="emptySquare" onclick="move(4)" id="empty4"></div>
+                <div class="line"></div>
+                <div class="emptySquare" onclick="move(5)" id="empty5"></div>
+                <div class="line"></div>
+                <div class="emptySquare" onclick="move(6)" id="empty6"></div>
+            </div>
+
+            <div class="horizontalLine"></div>
+
+            <div class="row">
+                <div class="emptySquare" onclick="move(7)" id="empty7"></div>
+                <div class="line"></div>
+                <div class="emptySquare" onclick="move(8)" id="empty8"></div>
+                <div class="line"></div>
+                <div class="emptySquare" onclick="move(9)" id="empty9"></div>
+            </div>
+        </div>
     </body>
-    <script src="scripts/vue.js"></script>
 </html>

@@ -1,5 +1,5 @@
 body {
-    background-color: brown;
+    background-color: rgb(32, 15, 15);
 }
 
 .header {
@@ -8,54 +8,60 @@ body {
     font-style: italic;
 }
 
-.emptyButtonX {
-    background-color: white;
+div.playingField {
+    position: relative;
+    background-color: lawngreen;
+    width: 900px;
+    height: 900px;
+    margin: auto;
+    /* display: table-row; */
+}
+
+div.row {
+    position: relative;
+    background-color: antiquewhite;
+    width: 900px;
+    height: 280px;
+    display: flex;
+    flex-direction: row;
+}
+
+div.emptySquare {
+    position: relative;
+    background-color: black;
     width: 280px;
     height: 280px;
     border: none;
 }
 
-.emptyButtonX:hover {
+div.line {
+    position: relative;
     background-color: white;
-    border: none;
-    width: 280px;
+    width: 30px;
     height: 280px;
-    background: url("../img/white_background_x.jpg") no-repeat center center white;
 }
 
-.emptyButtonY {
+div.horizontalLine {
+    position: relative;
     background-color: white;
-    width: 280px;
-    height: 280px;
-    border: none;
+    width: 900px;
+    height: 30px;
 }
 
-.emptyButtonY:hover {
-    background-color: white;
-    border: none;
-    width: 280px;
-    height: 280px;
-    background: url("../img/white_background_o.png") no-repeat center center white;
-}
-
-.xButton {
-    background-color: white;
+div.xSquare {
+    position: relative;
+    background-color: black;
     width: 280px;
     height: 280px;
     border: none;
-    background: url("../img/white_background_x.jpg") no-repeat center center white;
+    background: url("../img/white_x.jpg") no-repeat center center black;
 }
 
-.oButton {
-    background-color: white;
+.oSquare {
+    position: relative;
+    background-color: black;
     width: 280px;
     height: 280px;
     border: none;
-    background: url("../img/white_background_o.png") no-repeat center center white;
-}
-
-.X {
-    font-size: 40px;
-    line-height: 40px;
-    text-align: justify;
+    background: url("../img/white_o.jpg") no-repeat center center black;
 }
