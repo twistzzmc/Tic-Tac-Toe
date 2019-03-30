@@ -1,27 +1,93 @@
+html {
+    min-height: 100%;
+    position: relative;
+}
+
 body {
     background-color: rgb(32, 15, 15);
+    height: 100%;
+}
+
+#cloud-container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+    z-index: -1;
+    display: flex;
+    flex-direction: row;
+}
+
+.menu {
+    position: relative;
+    background-color: black;
+    width: 17%;
+    height: 100%;
+    /* min-width: 180px; */
+    display: flex;
+    flex-direction: column;
+}
+
+.game {
+    position: relative;
+    background-color: black;
+    width: 83%;
+    height: 100%;
+    /* max-width: 1320px; */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
 
 .header {
+    position: relative;
+    background-color: black;
+    height: 20%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.headerText {
+    position: relative;
+    /* background-color: blueviolet; */
+    color: rgb(54, 54, 105);
+    font-size: 6vmin;
     text-align: center;
-    color: teal;
-    font-style: italic;
+    font-style: oblique;
+    margin: auto;
 }
 
 div.playingField {
     position: relative;
     background-color: lawngreen;
-    width: 900px;
-    height: 900px;
+    width: 90vmin;
+    height: 90vmin;
     margin: auto;
-    /* display: table-row; */
+    /* align-self: center; */
+}
+
+div.bar {
+    position: relative;
+    background-color: black;
+    width: 3%;
+    height: 100%;
+}
+
+div.barLeft {
+    position: relative;
+    background-color: rgb(10, 10, 10);
+    width: 3%;
+    height: 100%;
 }
 
 div.row {
     position: relative;
     background-color: antiquewhite;
-    width: 900px;
-    height: 280px;
+    width: 100%;
+    height: 30%;
     display: flex;
     flex-direction: row;
 }
@@ -29,39 +95,87 @@ div.row {
 div.emptySquare {
     position: relative;
     background-color: black;
-    width: 280px;
-    height: 280px;
+    width: 30%;
+    height: 100%;
     border: none;
 }
 
 div.line {
     position: relative;
     background-color: white;
-    width: 30px;
-    height: 280px;
+    width: 5%;
+    height: 100%;
 }
 
 div.horizontalLine {
     position: relative;
     background-color: white;
-    width: 900px;
-    height: 30px;
+    width: 100%;
+    height: 5%;
 }
 
 div.xSquare {
     position: relative;
     background-color: black;
-    width: 280px;
-    height: 280px;
+    width: 30%;
+    height: 100%;
     border: none;
     background: url("../img/white_x.jpg") no-repeat center center black;
+    background-size: 95%;
 }
 
-.oSquare {
+div.oSquare {
     position: relative;
     background-color: black;
-    width: 280px;
-    height: 280px;
+    width: 30%;
+    height: 100%;
     border: none;
     background: url("../img/white_o.jpg") no-repeat center center black;
+    background-size: 120%;
+}
+
+div.newGame {
+    background-color: #040315;
+    width: 20vmin;
+    height: 10vmin;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.newGameText {
+    position: relative;
+    text-align: center;
+    color: white;
+    font-size: 3vmin;
+    margin: auto;
+}
+
+div.hidden {
+    position: fixed;
+    top: 35%;
+    left: 57%;
+    visibility: hidden;
+}
+
+div.message {
+    position: absolute;
+    top: 15%;
+    left: 15%;
+    width: 70%;
+    height: 40%;
+    /* background-color: aqua; */
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.messageText {
+    position: relative;
+    /* background-color: blueviolet; */
+    color: rgb(54, 54, 105);
+    font-size: 10vmin;
+    text-align: center;
+    font-style: oblique;
+    margin: auto;
 }
