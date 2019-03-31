@@ -10,12 +10,16 @@
         <div id="cloud-container">
             <div class="menu">
                 <div class="header" id="header">
-                    <h1 class="headerText">Tic-Tac-Toe</h1>
+                    <h1 class="headerText">Tic Tac Toe</h1>
                     <script src="scripts/vue.js"></script>
                 </div>
 
-                <div class="newGame" onclick="newGame()" id="newGame">
+                <div class="hidden" onclick="newGame()" id="newGame">
                     <p class="newGameText">New Game</p>
+                </div>
+
+                <div class="timer" id="timer">
+                    <p class="timerText" id="timerText"></p>
                 </div>
             </div>
 
@@ -23,27 +27,27 @@
                 <div class="barLeft"></div>
                 <div class="playingField">
                     <div class="row">
-                        <div class="emptySquare" onclick="move(1)" id="empty1"></div>
+                        <div class="emptySquare" id="empty1" data-index="1"></div>
                         <div class="line"></div>
-                        <div class="emptySquare" onclick="move(2)" id="empty2"></div>
+                        <div class="emptySquare" id="empty2" data-index="2"></div>
                         <div class="line"></div>
-                        <div class="emptySquare" onclick="move(3)" id="empty3"></div>
+                        <div class="emptySquare" id="empty3" data-index="3"></div>
                     </div>
                     <div class="horizontalLine"></div>
                     <div class="row">
-                        <div class="emptySquare" onclick="move(4)" id="empty4"></div>
+                        <div class="emptySquare" id="empty4" data-index="4"></div>
                         <div class="line"></div>
-                        <div class="emptySquare" onclick="move(5)" id="empty5"></div>
+                        <div class="emptySquare" id="empty5" data-index="5"></div>
                         <div class="line"></div>
-                        <div class="emptySquare" onclick="move(6)" id="empty6"></div>
+                        <div class="emptySquare" id="empty6" data-index="6"></div>
                     </div>
                     <div class="horizontalLine"></div>
                     <div class="row">
-                        <div class="emptySquare" onclick="move(7)" id="empty7"></div>
+                        <div class="emptySquare" id="empty7" data-index="7"></div>
                         <div class="line"></div>
-                        <div class="emptySquare" onclick="move(8)" id="empty8"></div>
+                        <div class="emptySquare" id="empty8" data-index="8"></div>
                         <div class="line"></div>
-                        <div class="emptySquare" onclick="move(9)" id="empty9"></div>
+                        <div class="emptySquare" id="empty9" data-index="9"></div>
                     </div>
                     
                     <div class="hidden" id="draw">
@@ -56,6 +60,10 @@
 
                     <div class="hidden" id="oWon">
                             <p class="messageText">Kolko wygralo</p>
+                    </div>
+
+                    <div class="firstGame" id="firstGame">
+                        <button class="firstGameText" onclick="firstGame()">Play</button>
                     </div>
                 </div>
                 <div class="bar"></div>
