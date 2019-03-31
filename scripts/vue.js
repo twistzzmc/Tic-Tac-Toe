@@ -1,13 +1,16 @@
 var counter = 0, startTime, endTime;
 var visited = [1,1,1,1,1,1,1,1,1];
 
-// document.getElementsByClassName("emptySquare").foreach(function(element) {
-//     element.addEventListener("click", function(event) {console.log(event)});
-// });
+Array.from(document.getElementsByClassName("emptySquare")).forEach(function(element) {
+    element.addEventListener("click", function(event) {
+        console.log(event.target.dataset.index)
+        move(event.target.dataset.index);
+    });
+})
 
-// Array.from(document.getElementsByClassName("emptySquare")).forEach(function(element) {
-//     console.log("mleko"); element.addEventListener("click", function(event) {console.log(event)});
-// });
+window.addEventListener('resize', evt => {
+    document.getElementById("game").style.width = document.getElementById("game").style.height;
+});
 
 function move(i) {
     if (visited[i-1] == 0) {
@@ -16,19 +19,18 @@ function move(i) {
         var squareClass = ("empty" + i);
         if (counter % 2 == 0) {
             document.getElementById(squareClass).classList.add("xSquare");
-            // var buttonClass = document.getElementById(squareClass).className;
             counter++;
         }
         else if (counter % 2 == 1) {
-            document.getElementById(squareClass).className = "oSquare";
-            var buttonClass = document.getElementById(squareClass).className;
+            document.getElementById(squareClass).classList.add("oSquare");
             counter++;
         }
     
         var squareClasses = [];
         for (var i = 1; i <= 9; i++) {
             squareClass = ("empty" + i);
-            squareClasses[i - 1] = [document.getElementById(squareClass).className];
+            if (document.getElementById(squareClass).classList.length == 2) squareClasses[i - 1] = [document.getElementById(squareClass).classList[1]];
+            else squareClasses[i - 1] = [document.getElementById(squareClass).classList[0]];
         }
         
         var won = 0;

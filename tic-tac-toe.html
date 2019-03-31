@@ -3,6 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <title>Tic-Tac-Toe</title>
+        <link href="https://fonts.googleapis.com/css?family=Indie+Flower" rel="stylesheet">
         <link rel="stylesheet" href="css/tic-tac-toeStyles.css">
     </head>
     
@@ -11,21 +12,20 @@
             <div class="menu">
                 <div class="header" id="header">
                     <h1 class="headerText">Tic Tac Toe</h1>
-                    <script src="scripts/vue.js"></script>
                 </div>
-
+                
                 <div class="hidden" onclick="newGame()" id="newGame">
-                    <p class="newGameText">New Game</p>
+                    <button class="newGameText">New Game</bottom>
                 </div>
-
+                
                 <div class="timer" id="timer">
                     <p class="timerText" id="timerText"></p>
                 </div>
             </div>
-
+            
             <div class="game">
                 <div class="barLeft"></div>
-                <div class="playingField">
+                <div class="playingField" id="playingField">
                     <div class="row">
                         <div class="emptySquare" id="empty1" data-index="1"></div>
                         <div class="line"></div>
@@ -51,15 +51,15 @@
                     </div>
                     
                     <div class="hidden" id="draw">
-                        <p class="messageText">Remis<p/>
+                        <p class="messageText">Draw<p/>
                     </div>
-
+                    
                     <div class="hidden" id="xWon">
-                        <p class="messageText">Krzyzyk wygral</p>
+                        <p class="messageText">First player won</p>
                     </div>
-
+                    
                     <div class="hidden" id="oWon">
-                            <p class="messageText">Kolko wygralo</p>
+                        <p class="messageText">Second player won</p>
                     </div>
 
                     <div class="firstGame" id="firstGame">
@@ -69,5 +69,6 @@
                 <div class="bar"></div>
             </div>
         </div>
+        <script src="scripts/vue.js"></script>
     </body>
     </html>

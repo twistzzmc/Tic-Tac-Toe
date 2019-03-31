@@ -60,10 +60,15 @@ body {
     /* color: rgb(54, 54, 105); */
     /* color: #1D1463; */
     color: #33387A;
-    font-size: 40px;
+    font-size: 50px;
     text-align: center;
-    font-family: 'Courier New', Courier, monospace, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    /* font-family: 'Courier New', Courier, monospace, Haettenschweiler, 'Arial Narrow Bold', sans-serif; */
+    font-family: 'Indie Flower', cursive;
     margin: auto;
+}
+
+.headerText:hover {
+    cursor: default;
 }
 
 div.playingField {
@@ -142,7 +147,7 @@ div.oSquare {
 }
 
 div.newGame {
-    background-color: #040315;
+    background-color: #0E0E0E;
     width: 20vmin;
     height: 10vmin;
     margin: auto;
@@ -151,11 +156,19 @@ div.newGame {
 }
 
 .newGameText {
+    background-color: #33387A;
     position: relative;
     text-align: center;
-    color: white;
+    color: #F2F2F2;
+    border-color: #33387A;
     font-size: 3vmin;
+    font-family: 'Indie Flower', cursive;
     margin: auto;
+}
+
+.newGameText:hover {
+    background-color: #33387A;
+    cursor: pointer;
 }
 
 .firstGame {
@@ -179,10 +192,21 @@ div.newGame {
     background-color: #33387A;
     font-size: 14vmin;
     text-align: center;
-    font-family: 'Courier New', Courier, monospace,Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    /* font-family: 'Courier New', Courier, monospace,Haettenschweiler, 'Arial Narrow Bold', sans-serif; */
+    font-family: 'Indie Flower', cursive;
     margin: auto;
-    border-radius: 4px;
+    border-radius: 6px;
     border: 2px solid #544B7A;
+    width: 50%;
+}
+
+.firstGameText:active {
+    transform: translateY(4px);
+}
+
+.firstGameText:hover {
+    background-color: rgb(61, 66, 141);
+    cursor: pointer;
 }
 
 div.hidden {
@@ -205,13 +229,26 @@ div.message {
 }
 
 .messageText {
-    position: relative;
-    /* background-color: blueviolet; */
+    /* position: relative;
+    background-color: blueviolet; 
     color: rgb(54, 54, 105);
     font-size: 10vmin;
     text-align: center;
     font-style: oblique;
+    margin: auto; */
+    position: relative;
+    background-color: #33387A;
+    font-size: 14vmin;
+    text-align: center;
+    /* font-family: 'Courier New', Courier, monospace,Haettenschweiler, 'Arial Narrow Bold', sans-serif; */
     margin: auto;
+    font-family: 'Indie Flower', cursive;
+    border-radius: 6px;
+    border: 2px solid #544B7A;
+}
+
+.messageText:hover {
+    cursor: default;
 }
 
 div.timer {
