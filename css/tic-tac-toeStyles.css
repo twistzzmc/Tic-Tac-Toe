@@ -73,9 +73,9 @@ body {
 
 div.playingField {
     position: relative;
-    background-color: lawngreen;
+    background-color: 0E0E0E;
     max-width: 650px;
-    width: 90vmin;
+    width: 100%;
     height: 90vmin;
     margin: auto;
     /* align-self: center; */
@@ -128,21 +128,21 @@ div.horizontalLine {
 
 div.xSquare {
     position: relative;
-    background-color: black;
+    background-color: #0E0E0E;
     width: 30%;
     height: 100%;
     border: none;
-    background: url("../img/white_x.jpg") no-repeat center center black;
+    background: url("../img/white_x.jpg") no-repeat center center #0E0E0E;
     background-size: 95%;
 }
 
 div.oSquare {
     position: relative;
-    background-color: black;
+    background-color: #0E0E0E;
     width: 30%;
     height: 100%;
     border: none;
-    background: url("../img/white_o.jpg") no-repeat center center black;
+    background: url("../img/white_o.jpg") no-repeat center center #0E0E0E;
     background-size: 120%;
 }
 
@@ -150,6 +150,7 @@ div.newGame {
     background-color: #0E0E0E;
     width: 20vmin;
     height: 10vmin;
+    min-width: 150px;
     margin: auto;
     display: flex;
     flex-direction: column;
@@ -161,7 +162,7 @@ div.newGame {
     text-align: center;
     color: #F2F2F2;
     border-color: #33387A;
-    font-size: 3vmin;
+    font-size: 24px;
     font-family: 'Indie Flower', cursive;
     margin: auto;
 }
@@ -197,7 +198,6 @@ div.newGame {
     margin: auto;
     border-radius: 6px;
     border: 2px solid #544B7A;
-    width: 50%;
 }
 
 .firstGameText:active {
@@ -253,9 +253,9 @@ div.message {
 
 div.timer {
     position: absolute;
-    /* background-color: aliceblue; */
+    /* background-color: aqua; */
     width: 70%;
-    height: 5%;
+    height: 9%;
     bottom: 10px;
     align-self: center;
     display: flex;
@@ -267,6 +267,8 @@ div.timer {
     /* background-color: aqua; */
     font-size: 4vmin;
     text-align: center;
-    margin: auto;
-    color: white;
+    margin: 0 auto;
+    color: #f2f2f2;
+    font-family: 'Indie Flower', cursive;
+    line-height: 93%;
 }

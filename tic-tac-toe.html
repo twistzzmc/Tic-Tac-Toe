@@ -19,11 +19,12 @@
                 </div>
                 
                 <div class="timer" id="timer">
-                    <p class="timerText" id="timerText"></p>
+                    <div class="timerText" id="timerText"></div>
+                    <div class="timerText" id="seconds"></div>
                 </div>
             </div>
             
-            <div class="game">
+            <div class="game" id="game">
                 <div class="barLeft"></div>
                 <div class="playingField" id="playingField">
                     <div class="row">
@@ -55,15 +56,15 @@
                     </div>
                     
                     <div class="hidden" id="xWon">
-                        <p class="messageText">First player won</p>
+                        <p class="messageText">X player won</p>
                     </div>
                     
                     <div class="hidden" id="oWon">
-                        <p class="messageText">Second player won</p>
+                        <p class="messageText">O player won</p>
                     </div>
 
                     <div class="firstGame" id="firstGame">
-                        <button class="firstGameText" onclick="firstGame()">Play</button>
+                        <div class="firstGameText" onclick="firstGame()">Play</div>
                     </div>
                 </div>
                 <div class="bar"></div>

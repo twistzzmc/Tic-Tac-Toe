@@ -1,5 +1,7 @@
-var counter = 0, startTime, endTime;
+var counter = 0, startTime, endTime, flow = 0;
 var visited = [1,1,1,1,1,1,1,1,1];
+var intervalID = window.setInterval(timerCheck, 1000);
+
 
 Array.from(document.getElementsByClassName("emptySquare")).forEach(function(element) {
     element.addEventListener("click", function(event) {
@@ -9,7 +11,7 @@ Array.from(document.getElementsByClassName("emptySquare")).forEach(function(elem
 })
 
 window.addEventListener('resize', evt => {
-    document.getElementById("game").style.width = document.getElementById("game").style.height;
+        document.getElementById("playingField").style.height = document.getElementById("playingField").clientWidth + "px";
 });
 
 function move(i) {
@@ -66,6 +68,7 @@ function move(i) {
 
 function start() {
     startTime = new Date();
+    flow = 1;
 }
 
 function end() {
@@ -77,11 +80,9 @@ function end() {
 }
 
 function firstGame() {
-    document.getElementById("newGame").className = "newGame";
-    var first = document.getElementById.className;
-
-    document.getElementById("firstGame").className = "hidden";
-    var first = document.getElementById.className;
+    document.getElementById("newGame").classList = "newGame";
+    document.getElementById("firstGame").classList = "hidden";
+    document.getElementById("seconds").innerText = "seconds";
 
     newGame();
 }
@@ -89,27 +90,20 @@ function firstGame() {
 function newGame() {
     for (var i = 1; i <= 9; i++){
         var squareClass = ("empty" + i);
-        document.getElementById(squareClass).className = "emptySquare";
-        var buttonClass = document.getElementById(squareClass).className;
+        document.getElementById(squareClass).classList = "emptySquare";
         visited[i-1] = 0;
     }
     counter = 0;
 
-    document.getElementById("draw").className = "hidden";
-    var buttonClass = document.getElementById(squareClass).className;
-
-    document.getElementById("xWon").className = "hidden";
-    var buttonClass = document.getElementById(squareClass).className;
-
-    document.getElementById("oWon").className = "hidden";
-    var buttonClass = document.getElementById(squareClass).className;
+    document.getElementById("draw").classList = "hidden";
+    document.getElementById("xWon").classList = "hidden";
+    document.getElementById("oWon").classList = "hidden";
 
     start();
 }
 
 function draw() {
-    document.getElementById("draw").className = "message";
-    var buttonClass = document.getElementById(squareClass).className;
+    document.getElementById("draw").classList = "message";
 }
 
 function xWon() {
@@ -117,8 +111,7 @@ function xWon() {
         visited[i] = 1;
     }
 
-    document.getElementById("xWon").className = "message";
-    var buttonClass = document.getElementById(squareClass).className;
+    document.getElementById("xWon").classList = "message";
 }
 
 function oWon() {
@@ -126,16 +119,24 @@ function oWon() {
         visited[i] = 1;
     }
     
-    document.getElementById("oWon").className = "message";
-    var buttonClass = document.getElementById(squareClass).className;
+    document.getElementById("oWon").classList = "message";
+}
+
+function timer() {
+    var timeDiff = end();
+    timeDiff = Math.round(timeDiff);
+
+    document.getElementById("timerText").innerText = timeDiff;
+}
+
+function timerCheck() {
+    console.log(flow);
+    if (flow == 1) timer();
 }
 
 function endGame(won) {
-    var timeDiff = end();
-
-    document.getElementById("timerText").innerText = timeDiff;
-    var timer = document.getElementById("timerText").innerText;
-    
+    flow = 0;
+    timer();
     if (won == 0) draw();
     else if (won == 1) xWon();
     else if (won == 2) oWon();
