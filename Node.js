@@ -84,9 +84,17 @@ io.on('connection', function(socket){
   console.log("user has been added to the list " + availableUsers[userCount - 1]);
 
   socket.on('disconnect', function() {
-    for (var i = 0; availableUsers[i] != socket.id; i++);
-    availableUsers.splice(i,1);
-    userCount--;
+    for (var i = 0; availableUsers[i] != socket.id && i < userCount; i++);
+    if (availableUsers[i] == socket.id) {
+      availableUsers.splice(i,1);
+      userCount--;
+    }
+    else {
+      for (var i = 0; awaitingForGame[i] != socket.id && i < userCount; i++);
+      awaitingForGame.splice(i,1);
+      userCount--;
+    }
+    console.log("user disconnected " + socket.id);
   })
 
   console.log("Printing users: ");
