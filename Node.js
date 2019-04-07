@@ -1,15 +1,14 @@
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+
 var port = process.env.PORT || 3000;
 
-// var http = require('http');
 var url = require('url');
 var fs = require('fs');
-// var path = __dirname.substring(0, __dirname.length - 6);
 
-// io.of('/api/chat/connect');
-
+var availableUsers = [], userCount = 0, awaitingForGame = [], waitingUsers = 0;
+var game = [], moves = [];
 app.get('/', function(req, res) {
   res.sendFile(__dirname + '/public/tic-tac-toe.html');
 });
@@ -30,47 +29,72 @@ app.get('/public/img/white_x.jpg', function(req, res) {
   res.sendFile(__dirname + '/public/img/white_x.jpg');
 });
 
-io.on('connection', function(socket) {
-  console.log('a user connected');
-});
-
 io.on('connection', function(socket){
+  socket.on('endGame', function() {
+    availableUsers[userCount] = socket.id;
+    availableUsers[userCount + 1] = game[socket.id];
+    userCount += 2;
+
+    game.splice(socket.id, 1);
+    game.splice(game[socket.id], 1);
+  })
+
   socket.on('move', function(msg){
     console.log('move: ' + msg);
-    io.emit('move', msg);
+    // io.emit('move', msg);
+
+    if (moves[socket.id] == 1) {
+      moves[socket.id] = 0;
+      moves[game[socket.id]] = 1;
+      io.to(socket.id).emit('move', msg);
+      io.to(game[socket.id]).emit('move', msg);
+    }
   });
 
   socket.on('firstGame', function(){
-    console.log('first game');
-    io.emit('firstGame');
+    console.log('first game' + socket.id);
+    for (var i = 0; availableUsers[i] != socket.id; i++);
+    availableUsers.splice(i,1);
+    userCount--;
+    awaitingForGame[waitingUsers] = socket.id;
+    waitingUsers++;
+    if (waitingUsers > 1) {
+      game[awaitingForGame[waitingUsers - 1]] = awaitingForGame[0];
+      game[awaitingForGame[0]] = awaitingForGame[waitingUsers - 1];
+
+      awaitingForGame.splice(0,1);
+      awaitingForGame.splice(waitingUsers - 1, 1);
+      waitingUsers -= 2;
+      moves[socket.id] = 1;
+
+      io.to(game[socket.id]).emit('firstGame');
+      io.to(socket.id).emit('firstGame');
+    }
   });
 
   socket.on('newGame', function(){
-    console.log('new game');
+    // console.log('new game');
     io.emit('newGame');
   });
+
+  var my_id = socket.id;
+  console.log("user_connected", "user with id " + my_id);
+  availableUsers[userCount] = socket.id;
+  userCount++;
+  console.log("user has been added to the list " + availableUsers[userCount - 1]);
+
+  socket.on('disconnect', function() {
+    for (var i = 0; availableUsers[i] != socket.id; i++);
+    availableUsers.splice(i,1);
+    userCount--;
+  })
+
+  console.log("Printing users: ");
+  for (var i = 0; i < userCount; i++) {
+    console.log("User #" + i + ": " + availableUsers[i]);
+  }
 });
 
 http.listen(3000, function() {
   console.log('listening on *:3000');
 });
-
-// http://localhost:3000/socket.io/?EIO=3&transport=polling&t=1554339108057-204
-
-// http.createServer(function (req, res) {
-//   var q = url.parse(req.url, true);
-//   var filename = ".." + q.pathname;
-//   console.log(filename);
-//   fs.readFile(filename, function(err, data) {
-//     if (err) {
-//       res.writeHead(404, {'Content-Type': 'text/html'});
-//       return res.end("404 Not Found");
-//     }  
-//     if (filename.indexOf(".css") > -1) {
-//       res.writeHead(200, {'Content-Type': 'text/css'});
-//     } 
-//     else res.writeHead(200, {'Content-Type': 'text/html'});
-//     res.write(data);
-//     return res.end();
-//   });
-// }).listen(8080);

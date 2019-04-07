@@ -21,20 +21,20 @@ socket.on('newGame', function(){
 Array.from(document.getElementsByClassName("emptySquare")).forEach(function(element) {
     element.addEventListener("click", function(event) {
         console.log(event.target.dataset.index)
-        move(event.target.dataset.index);
+        // move(event.target.dataset.index);
 
         socket.emit('move', event.target.dataset.index);
     });
 })
 
 document.getElementById("firstGameText").addEventListener("click", function(event) {
-    firstGame();
+    // firstGame();
 
     socket.emit('firstGame');
 });
 
 document.getElementById("newGameText").addEventListener("click", function(event) {
-    newGame();
+    // newGame();
 
     socket.emit('newGame');
 });
@@ -169,4 +169,6 @@ function endGame(won) {
     if (won == 0) draw();
     else if (won == 1) xWon();
     else if (won == 2) oWon();
+
+    socket.emit('endGame');
 }
