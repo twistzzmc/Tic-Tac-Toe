@@ -9,6 +9,8 @@ var fs = require('fs');
 
 var availableUsers = [], userCount = 0, awaitingForGame = [], waitingUsers = 0;
 var game = [], moves = [];
+
+//loading needed files onto server=============================
 app.get('/', function(req, res) {
   res.sendFile(__dirname + '/public/tic-tac-toe.html');
 });
@@ -28,9 +30,12 @@ app.get('/public/img/white_o.jpg', function(req, res) {
 app.get('/public/img/white_x.jpg', function(req, res) {
   res.sendFile(__dirname + '/public/img/white_x.jpg');
 });
+//=============================================================
 
+//all the functions (proper server)============================
 io.on('connection', function(socket){
-  socket.on('endGame', function() {
+  //when two players and their game normally
+  socket.on('endGame', function() { 
     availableUsers[userCount] = socket.id;
     availableUsers[userCount + 1] = game[socket.id];
     userCount += 2;
@@ -38,8 +43,10 @@ io.on('connection', function(socket){
     game.splice(socket.id, 1);
     game.splice(game[socket.id], 1);
   })
+  //----------------------------------------
 
-  socket.on('move', function(msg){
+  //when player makes a move
+  socket.on('move', function(msg){ 
     console.log('move: ' + msg);
     // io.emit('move', msg);
 
@@ -50,14 +57,19 @@ io.on('connection', function(socket){
       io.to(game[socket.id]).emit('move', msg);
     }
   });
+  //-------------------------
 
-  socket.on('firstGame', function(){
+  //when player wishes to start a game
+  socket.on('firstGame', function(){ 
     console.log('first game' + socket.id);
     for (var i = 0; availableUsers[i] != socket.id; i++);
     availableUsers.splice(i,1);
     userCount--;
     awaitingForGame[waitingUsers] = socket.id;
     waitingUsers++;
+    for (var i = 0; i < waitingUsers; i++) {
+      console.log("\nAwaiting for play:\n" + awaitingForGame[i]);
+    }
     if (waitingUsers > 1) {
       game[awaitingForGame[waitingUsers - 1]] = awaitingForGame[0];
       game[awaitingForGame[0]] = awaitingForGame[waitingUsers - 1];
@@ -67,22 +79,39 @@ io.on('connection', function(socket){
       waitingUsers -= 2;
       moves[socket.id] = 1;
 
+      console.log("The game is beetwen: " + socket.id + " and " + game[socket.id]);
+
       io.to(game[socket.id]).emit('firstGame');
       io.to(socket.id).emit('firstGame');
     }
   });
+  //-----------------------------------
 
+  //when player wishes to cancel current game session
   socket.on('newGame', function(){
-    // console.log('new game');
-    io.emit('newGame');
-  });
+    console.log('new game');
+    
+    availableUsers[userCount] = socket.id;
+    availableUsers[userCount + 1] = game[socket.id];
+    userCount += 2;
 
+    io.to(socket.id).emit('reset');
+    io.to(game[socket.id]).emit('reset');
+    
+    game.splice(game[socket.id],1);
+    game.splice(socket.id,1);
+  });
+  //-------------------------------------------------
+
+  //adding newly connected person to data--------------------
   var my_id = socket.id;
   console.log("user_connected", "user with id " + my_id);
   availableUsers[userCount] = socket.id;
   userCount++;
   console.log("user has been added to the list " + availableUsers[userCount - 1]);
+  //---------------------------------------------------------
 
+  //removing from data disconnected user
   socket.on('disconnect', function() {
     for (var i = 0; availableUsers[i] != socket.id && i < userCount; i++);
     if (availableUsers[i] == socket.id) {
@@ -92,10 +121,11 @@ io.on('connection', function(socket){
     else {
       for (var i = 0; awaitingForGame[i] != socket.id && i < userCount; i++);
       awaitingForGame.splice(i,1);
-      userCount--;
+      waitingUsers--;
     }
     console.log("user disconnected " + socket.id);
-  })
+  });
+  //-------------------------------------
 
   console.log("Printing users: ");
   for (var i = 0; i < userCount; i++) {
@@ -104,5 +134,5 @@ io.on('connection', function(socket){
 });
 
 http.listen(port, function() {
-  console.log('listening on *:3000');
+  console.log('listening on *:80');
 });
