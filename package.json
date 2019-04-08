@@ -710,7 +710,8 @@
       "integrity": "sha1-AI4G2AlDIMNy28L47XagymyKxBk="
     },
 
-      "express":"*"
+      "express":"*",
+      "socket.io":"*"
       
   }
 }
