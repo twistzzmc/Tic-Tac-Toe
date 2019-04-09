@@ -36,6 +36,10 @@ socket.on('searching', function() {
 socket.on('cancelSearch', function() {
     cancelSearch();
 });
+
+socket.on('checkMove', function(i) {
+    checkMove(i);
+});
 //-------------------------------
 
 //emitting to the server if the user clicks on something that concerns other users--
@@ -44,7 +48,7 @@ Array.from(document.getElementsByClassName("emptySquare")).forEach(function(elem
         console.log(event.target.dataset.index)
         // move(event.target.dataset.index);
 
-        socket.emit('move', event.target.dataset.index);
+        socket.emit('checkMove', event.target.dataset.index);
     });
 })
 
@@ -105,6 +109,10 @@ function nickTaken(nick) {
 }
 
 //when player puts x or o
+function checkMove(i) {
+    if (visited[i-1] == 0) socket.emit('move', i);
+}
+
 function move(i, xo) {
     if (visited[i-1] == 0) { //checking if the move is according to rules
         visited[i-1] = 1;

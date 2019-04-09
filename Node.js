@@ -7,8 +7,8 @@ var port = process.env.PORT || 80;
 var url = require('url');
 var fs = require('fs');
 
-var searchingUsers = [], userCount = 0, awaitingForGame = [], searchingUsersCount = 0, taken = 0;
-var game = [], moves = [], allUsers = [], nicks = [], xo = [], places = [1,1,1,1,1,1,1,1,1];
+var searchingUsers = [], userCount = 0, searchingUsersCount = 0, taken = 0;
+var game = [], moves = [], allUsers = [], nicks = [], xo = [], places = [1,1,1,1,1,1,1,1,1,1,1];
 
 //loading needed files onto server=============================
 app.get('/', function(req, res) {
@@ -84,6 +84,8 @@ io.on('connection', function(socket){
 		console.log("Searching Quick Play for " + socket.id + " " + nicks[socket.id]);
 
 		if (searchingUsersCount > 1) {
+
+
 			game[searchingUsers[searchingUsersCount - 1]] = searchingUsers[0];
 			game[searchingUsers[0]] = searchingUsers[searchingUsersCount - 1];
 
@@ -105,15 +107,21 @@ io.on('connection', function(socket){
 
 	//when player makes a move
 	socket.on('move', function(move){
-		if (moves[socket.id] == 1 && places[move] == 1) {
-			places[move] = 0;
+		if (moves[socket.id] == 1) {
+			io.to(socket.id).emit('move', move, xo[socket.id]);
+			io.to(game[socket.id]).emit('move', move, xo[game[socket.id]]);
+			// places[move] = 0;
 			console.log(nicks[socket.id] + " moves: " + move);
 			console.log(nicks[game[socket.id]] + "'s move")
 			moves[socket.id] = 0;
 			moves[game[socket.id]] = 1;
-			io.to(socket.id).emit('move', move, xo[socket.id]);
-			io.to(game[socket.id]).emit('move', move, xo[game[socket.id]]);
   		}
+	});
+
+	socket.on('checkMove', function(move) {
+		if (moves[socket.id] == 1) {
+			io.to(socket.id).emit('checkMove', move, xo[socket.id]);
+		}
 	});
 	//-------------------------
 	
