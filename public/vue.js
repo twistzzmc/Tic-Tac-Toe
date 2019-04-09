@@ -6,19 +6,35 @@ var socket = io();
 
 //listening to the server-------
 socket.on('reset', function() { 
-    reset();
+    reset(1);
 });
 
-socket.on('move', function(msg){
-    move(msg);
+socket.on('move', function(msg, xo) {
+    move(msg, xo);
 });
 
-socket.on('firstGame', function(){
-    firstGame();
-});
-
-socket.on('newGame', function(){
+socket.on('newGame', function() {
     newGame();
+});
+
+socket.on('nickTaken', function(nick) {
+    nickTaken(nick);
+});
+
+socket.on('newPlayer', function(nick) {
+    newPlayer(nick);
+});
+
+socket.on('opponentLeft', function() {
+    reset(0);
+});
+
+socket.on('searching', function() {
+    searching();
+});
+
+socket.on('cancelSearch', function() {
+    cancelSearch();
 });
 //-------------------------------
 
@@ -32,12 +48,20 @@ Array.from(document.getElementsByClassName("emptySquare")).forEach(function(elem
     });
 })
 
-document.getElementById("firstGameText").addEventListener("click", function(event) {
-    socket.emit('firstGame');
+document.getElementById('cancel').addEventListener("click", function(event) {
+    socket.emit('cancel');
 });
 
-document.getElementById("newGameText").addEventListener("click", function(event) {
-    socket.emit('newGame');
+document.getElementById('cancelSearch').addEventListener("click", function(event) {
+    socket.emit('cancelSearch');
+});
+
+document.getElementById("quickPlayText").addEventListener("click", function(event) {
+    socket.emit('quickPlay');
+});
+
+document.getElementById('enterNickButton').addEventListener("click", function(event) {
+        socket.emit('enteredNick', document.getElementById('nick').value);
 });
 //-------------------------------------------------------------------------------------
 
@@ -66,8 +90,22 @@ window.addEventListener('resize', evt => {
 
 //====================================functions===========================================================
 
+function newPlayer(nick) {
+    document.getElementById('nickMenu').classList = 'hidden';
+    document.getElementById('header').classList = 'header';
+    document.getElementById('newGameMenu').classList = 'newGameMenu';
+    document.getElementById("seconds").innerText = "seconds";
+}
+
+function nickTaken(nick) {
+    console.log("Nick '" + nick + "' is taken");
+
+    document.getElementsByName('nick')[0].value="";
+    document.getElementsByName('nick')[0].placeholder="Nick taken";
+}
+
 //when player puts x or o
-function move(i) {
+function move(i, xo) {
     if (visited[i-1] == 0) { //checking if the move is according to rules
         visited[i-1] = 1;
 
@@ -92,30 +130,30 @@ function move(i) {
         var won = 0; 
         for (var i = 0; i < 9 && !won; i += 3){
             if ((squareClasses[i] == "xSquare" && squareClasses[i+1] == "xSquare" && squareClasses[i+2] == "xSquare") || (squareClasses[i] == "oSquare" && squareClasses[i+1] == "oSquare" && squareClasses[i+2] == "oSquare")) {
-                if (squareClasses[i] == "xSquare") endGame(1);
-                else if (squareClasses[i] == "oSquare") endGame(2);
+                if (squareClasses[i] == "xSquare") endGame(1, xo);
+                else if (squareClasses[i] == "oSquare") endGame(2, xo);
                 won = 1;
             }
         }
         for (var i = 0; i < 3 && !won; i++) {
             if ((squareClasses[i] == "xSquare" && squareClasses[i+3] == "xSquare" && squareClasses[i+6] == "xSquare") || (squareClasses[i] == "oSquare" && squareClasses[i+3] == "oSquare" && squareClasses[i+6] == "oSquare")) {
-                if (squareClasses[i] == "xSquare") endGame(1);
-                else if (squareClasses[i] == "oSquare") endGame(2);
+                if (squareClasses[i] == "xSquare") endGame(1, xo);
+                else if (squareClasses[i] == "oSquare") endGame(2, xo);
                 won = 1;
             }
         }
         if ((!won && squareClasses[0] == "xSquare" && squareClasses[4] == "xSquare" && squareClasses[8] == "xSquare") || (squareClasses[0] == "oSquare" && squareClasses[4] == "oSquare" && squareClasses[8] == "oSquare")) {
-            if (squareClasses[0] == "xSquare") endGame(1);
-            else if (squareClasses[0] == "oSquare") endGame(2);
+            if (squareClasses[0] == "xSquare") endGame(1, xo);
+            else if (squareClasses[0] == "oSquare") endGame(2, xo);
             won = 1;
         }
         else if ((!won && squareClasses[2] == "xSquare" && squareClasses[4] == "xSquare" && squareClasses[6] == "xSquare") || (squareClasses[2] == "oSquare" && squareClasses[4] == "oSquare" && squareClasses[6] == "oSquare")) {
-            if (squareClasses[2] == "xSquare") endGame(1);
-            else if (squareClasses[2] == "oSquare") endGame(2);
+            if (squareClasses[2] == "xSquare") endGame(1, xo);
+            else if (squareClasses[2] == "oSquare") endGame(2, xo);
             won = 1;
         }
 
-        if(counter == 9 && !won) endGame(0);
+        if(counter == 9 && !won) endGame(0, xo);
         //-------------------------------------------------------------------------------------
     }
 
@@ -137,16 +175,9 @@ function end() {
 //--------------------------
 
 //when a player decides he want to play (hits play button)
-function firstGame() {
-    document.getElementById("newGame").classList = "newGame";
-    document.getElementById("firstGame").classList = "hidden";
-    document.getElementById("seconds").innerText = "seconds";
-    document.getElementById("newGameText").innerText = "Cancel";
-
-    newGame();
-}
-
 function newGame() {
+
+    console.log("new game");
     for (var i = 1; i <= 9; i++){
         var squareClass = ("empty" + i);
         document.getElementById(squareClass).classList = "emptySquare";
@@ -155,8 +186,12 @@ function newGame() {
     counter = 0;
 
     document.getElementById("draw").classList = "hidden";
-    document.getElementById("xWon").classList = "hidden";
-    document.getElementById("oWon").classList = "hidden";
+    document.getElementById('searchingMiddle').classList = 'hidden';
+    document.getElementById('cancelSearch').classList = 'hidden';
+    document.getElementById('cancel').classList = 'cancel';
+
+    document.getElementById("youLost").classList = "hidden";
+    document.getElementById("youWon").classList = "hidden";
 
     start();
 }
@@ -167,20 +202,20 @@ function draw() {
     document.getElementById("draw").classList = "message";
 }
 
-function xWon() {
+function youWon() {
     for (var i = 0; i < 9; i++) {
         visited[i] = 1;
     }
 
-    document.getElementById("xWon").classList = "message";
+    document.getElementById("youWon").classList = "message";
 }
 
-function oWon() {
+function youLost() {
     for (var i = 0; i < 9; i++) {
         visited[i] = 1;
     }
-    
-    document.getElementById("oWon").classList = "message";
+
+    document.getElementById("youLost").classList = "message";
 }
 
 function timer() {
@@ -195,22 +230,51 @@ function timerCheck() {
     if (flow == 1) timer();
 }
 
-function endGame(won) { //main function when game ends properly
+function endGame(won, xo) { //main function when game ends properly
     flow = 0;
     timer(); //stoping timer so it show the game time
     if (won == 0) draw(); //if the game ends in a draw
-    else if (won == 1) xWon(); // if x wins
-    else if (won == 2) oWon(); // if o wins
+    else if (won == 1 && xo == 1 || (won == 2 && xo == 0)) youWon(); // if you win
+    else if ((won == 1 && xo == 0) || (won == 2 && xo == 1)) youLost(); // if you lose
+    else alert("error");
+
+    document.getElementById('cancel').classList = 'hidden';
+    document.getElementById('newGameMenu').classList = 'newGameMenu';
 
     socket.emit('endGame');
 }
 
-function reset() { // when someone decides to cancel the game
+function reset(i) { // when someone decides to cancel the game
+    console.log("reset");
     flow = 0;
     timer();
 
-    console.log("reset");
-    document.getElementById("newGame").classList = "hidden";
-    document.getElementById("firstGame").classList = "firstGame";
+    document.getElementById('cancel').classList = 'hidden';
+    document.getElementById('newGameMenu').classList = 'newGameMenu';
+
+    if (i == 1) document.getElementById("youCancelled").classList = "message";
+    else if (i == 0) document.getElementById("cancelled").classList = "message";
+
+    for (var i = 0; i < 9; i++) {
+        visited[i] = 1;
+    }
+
+    socket.emit('endGame');
+}
+
+function cancelSearch() {
+    console.log("canceling search");
+    document.getElementById('searchingMiddle').classList = 'hidden';
+    document.getElementById('cancelSearch').classList = 'hidden';
+    document.getElementById('newGameMenu').classList = 'newGameMenu';
+}
+
+function searching() {
+    document.getElementById('newGameMenu').classList = 'hidden';
+    document.getElementById('cancelSearch').classList = 'cancel';
+    document.getElementById('searchingMiddle').classList = 'message';
+    document.getElementById("cancelled").classList = "hidden";
+    document.getElementById("youLost").classList = "hidden";
+    document.getElementById("youWon").classList = "hidden";
 }
 //-----------------------------------------------------------------------

@@ -4,19 +4,51 @@
         <meta charset="UTF-8">
         <title>Tic-Tac-Toe</title>
         <link href="https://fonts.googleapis.com/css?family=Indie+Flower" rel="stylesheet">
-        <link rel="stylesheet" href="public/tic-tac-toeStyles.css">
+        <link rel="stylesheet" href="public/css/main.css">
         <!-- <link rel="stylesheet" href="tic-tac-toeStyles.css"> -->
     </head>
     
     <body>
+        <div class="nickMenu" id="nickMenu">
+            <div class="gameName">Tic Tac Toe</div>
+
+            <div class="nickPlace" id="nickPlace">
+                <input class="nick" id="nick" placeholder="Nick" name="nick">
+            </div>
+                    
+            <div class="enterNick" id="enterNick">
+                <button class="enterNickButton" id="enterNickButton">
+                    <span>Enter</span>
+                </button>
+            </div>
+        </div>
+
         <div id="cloud-container">
             <div class="menu" id="menu">
                 <div class="header" id="header">
                     <h1 class="headerText">Tic Tac Toe</h1>
                 </div>
-                
-                <div class="hidden" id="newGame">
-                    <button class="newGameText" id="newGameText"></bottom>
+
+                <div class="hidden" id="newGameMenu">
+                    <div class="quickPlay" id="quickPlay">
+                        <button class="quickPlayText" id="quickPlayText">Quick Play</bottom>
+                    </div>
+
+                    <div class="opponentNick" id="opponentNick">
+                        <input class="opponentNickInput" id="opponentNickInput" name="opponentNickInput" placeholder="Nick">
+                    </div>
+
+                    <div class="chooseOpponent" id="chooseOpponent">
+                        <button class="chooseOpponentButton" id="chooseOpponentButton">Choose Opponent</button>
+                    </div>
+                </div>
+
+                <div class="hidden" id="cancelSearch">
+                        <button class="cancelSearchButton" id="cancelSearchButton">Cancel search</button>
+                </div>
+
+                <div class="hidden" id="cancel">
+                    <button class="cancelButton" id="cancelButton">Cancel</button>
                 </div>
                 
                 <div class="timer" id="timer">
@@ -64,17 +96,25 @@
                     <div class="hidden" id="draw">
                         <p class="messageText">Draw<p/>
                     </div>
-                    
-                    <div class="hidden" id="xWon">
-                        <p class="messageText">X player won</p>
-                    </div>
-                    
-                    <div class="hidden" id="oWon">
-                        <p class="messageText">O player won</p>
+
+                    <div class="hidden" id="searchingMiddle">
+                        <p class="messageText">Searching</p>
                     </div>
 
-                    <div class="firstGame" id="firstGame">
-                        <div class="firstGameText" id="firstGameText">Play</div>
+                    <div class="hidden" id="cancelled">
+                        <p class="messageText">Opponent left</p>
+                    </div>
+
+                    <div class="hidden" id="youWon">
+                        <p class="messageText">You won</p>
+                    </div>
+
+                    <div class="hidden" id="youLost">
+                        <p class="messageText">You lost</p>
+                    </div>
+
+                    <div class="hidden" id="youCancelled">
+                        <p class="messageText">You left</p>
                     </div>
                 </div>
                 <div class="bar"></div>

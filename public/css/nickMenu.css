@@ -1,0 +1,101 @@
+/* div.imgBackground {
+    position: absolute;
+    z-index: +1;
+    width: 100%;
+    height: 100%; 
+    background: url("../img/c13.jpg") no-repeat center center;
+} */
+
+div.gameName {
+    position: relative;
+    color: #466365;
+    font-size: 55px;
+    text-align: center;
+    font-family: 'Indie Flower', cursive;
+    margin: auto;
+}
+
+.gameName:hover {
+    cursor: default;
+}
+
+div.enterNick {
+    /* background-color: #001F54; */
+    background: url("../img/c13.jpg") no-repeat center center;
+    position: relative;
+    width: 50%;
+    height: 12%;
+    margin: auto;
+    bottom: 50px;
+}
+
+.enterNickButton {
+    background-color: #466365;
+    border: 4px solid #F2F2F2;
+    border-radius: 7px;  
+    position: relative;
+    width: 100%;
+    height: 100%;
+    font-family: 'Indie Flower', cursive;
+    color: #F2F2F2;
+    font-size: 4vh;
+    outline-width: 0;
+}
+
+.enterNickButton span {
+    color: #F2F2F2;
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+}
+
+.enterNickButton span:after {
+    color: #F2F2F2;
+    content: '\00bb';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px;
+    transition: 0.5s;
+  }
+
+.enterNickButton:hover span {
+    padding-right: 25px;
+}
+
+.enterNickButton:hover span:after {
+    opacity: 1;
+    right: 0;
+}
+
+.enterNickButton:active {
+    transform: translateY(1px);
+}
+
+div.nickPlace {
+    /* background-color: #001F54; */
+    background: url("../img/c13.jpg") no-repeat center center;
+    position: relative;
+    margin: auto;
+    width: 70%;
+    height: 16%;
+}
+
+.nick {
+    position: relative;
+    background-color: #F2F2F2;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box; 
+    font-size: 5vh;
+    border: 4px solid #466365;
+    border-radius: 7px;  
+    font-family: 'Indie Flower', cursive;
+    color: #466365;
+}
+
+.nick:focus {
+    outline-width: 0;
+}
+/**/

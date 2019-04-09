@@ -1,0 +1,166 @@
+/*the highiest level of the divs in the GAME DIV*/
+div.playingField {
+    position: relative;
+    background-color: 0E0E0E;
+    max-width: 650px;
+    width: 100%;
+    height: 90vmin;
+    margin: auto;
+}
+
+div.row {
+    position: relative;
+    background-color: antiquewhite;
+    width: 100%;
+    height: 30%;
+    display: flex;
+    flex-direction: row;
+}
+
+div.bar {
+    position: relative;
+    background-color: #0E0E0E;
+    width: 3%;
+    height: 100%;
+}
+
+div.barLeft {
+    position: relative;
+    background-color: rgb(10, 10, 10);
+    width: 35px;
+    height: 100%;
+}
+/*----------------------------------------------*/
+
+/*div to hide the left menu and everything that's inside of it*/
+div.hideMenu {
+    background-color: #F2F2F2;
+    width: 32px;
+    height: 32px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+}
+
+div.boxForVerticalBars {
+    margin: auto;
+    width: 32px;
+    height: 21px;
+    display: flex;
+    flex-direction: column;
+}
+
+div.verticalBar {
+    position: relative;
+    margin: auto;
+    background-color: #466365;
+    width: 22px;
+    height: 3px;
+}
+/*------------------------------------------------------------*/
+
+/*main things making the playing field that are inside row*/
+div.emptySquare {
+    position: relative;
+    background-color: #0E0E0E;
+    width: 30%;
+    height: 100%;
+    border: none;
+}
+
+div.xSquare {
+    position: relative;
+    background-color: #0E0E0E;
+    width: 30%;
+    height: 100%;
+    border: none;
+    background: url("../img/white_x.jpg") no-repeat center center #0E0E0E;
+    background-size: 95%;
+}
+
+div.oSquare {
+    position: relative;
+    background-color: #0E0E0E;
+    width: 30%;
+    height: 100%;
+    border: none;
+    background: url("../img/white_o.jpg") no-repeat center center #0E0E0E;
+    background-size: 120%;
+}
+
+div.line {
+    position: relative;
+    background-color: #F2F2F2;
+    width: 5%;
+    height: 100%;
+}
+
+div.horizontalLine {
+    position: relative;
+    background-color: #F2F2F2;
+    width: 100%;
+    height: 5%;
+}
+/*--------------------------------------------------------*/
+
+/*play div in the middle of the game div*/
+/* .firstGame {
+    position: absolute;
+    top: 15%;
+    left: 15%;
+    width: 70%;
+    height: 40%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.firstGameText {
+    position: relative;
+    background-color: #33387A;
+    font-size: 14vmin;
+    text-align: center;
+    font-family: 'Indie Flower', cursive;
+    margin: auto;
+    border-radius: 6px;
+    border: 2px solid #544B7A;
+}
+
+.firstGameText:active {
+    transform: translateY(4px);
+}
+
+.firstGameText:hover {
+    background-color: rgb(61, 66, 141);
+    cursor: pointer;
+} */
+/*--------------------------------------*/
+
+/*message after the game ends in the place of first game*/
+div.message {
+    position: absolute;
+    top: 15%;
+    left: 15%;
+    width: 70%;
+    height: 40%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.messageText {
+    position: relative;
+    background-color: #F2F2F2;
+    font-size: 14vmin;
+    text-align: center;
+    margin: auto;
+    color: #466365;
+    font-family: 'Indie Flower', cursive;
+    border-radius: 6px;
+    border: 5px solid #466365;
+}
+
+.messageText:hover {
+    cursor: default;
+}
+/*------------------------------------------------------*/
