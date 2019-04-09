@@ -8,7 +8,7 @@ var url = require('url');
 var fs = require('fs');
 
 var searchingUsers = [], userCount = 0, awaitingForGame = [], searchingUsersCount = 0, taken = 0;
-var game = [], moves = [], allUsers = [], nicks = [], xo = [];
+var game = [], moves = [], allUsers = [], nicks = [], xo = [], places = [1,1,1,1,1,1,1,1,1];
 
 //loading needed files onto server=============================
 app.get('/', function(req, res) {
@@ -105,7 +105,8 @@ io.on('connection', function(socket){
 
 	//when player makes a move
 	socket.on('move', function(move){
-		if (moves[socket.id] == 1) {
+		if (moves[socket.id] == 1 && places[move] == 1) {
+			places[move] = 0;
 			console.log(nicks[socket.id] + " moves: " + move);
 			console.log(nicks[game[socket.id]] + "'s move")
 			moves[socket.id] = 0;
