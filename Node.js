@@ -132,7 +132,7 @@ io.on('connection', function(socket){
 
 			console.log("Found Game between: '" + nicks[socket.id] + "' and '" + nicks[game[socket.id]] + "'");
 			console.log(nicks[socket.id] + " is " + moves[socket.id] + " and " + nicks[game[socket.id]] + " is " + moves[game[socket.id]]);
-			
+
 			io.to(socket.id).emit('newGame', nicks[game[socket.id]]);
 			io.to(game[socket.id]).emit('newGame', nicks[socket.id]);
 
@@ -151,8 +151,8 @@ io.on('connection', function(socket){
 			console.log(nicks[socket.id] + " moves: " + move);
 			console.log(nicks[game[socket.id]] + "'s move")
 
-			io.to(socket.id).emit('moveInfo', nicks[socket.id], 0);
-			io.to(game[socket.id]).emit('moveInfo', nicks[game[socket.id]], 1);
+			io.to(socket.id).emit('moveInfo', nicks[game[socket.id]], 0);
+			io.to(game[socket.id]).emit('moveInfo', nicks[socket.id], 1);
 
 			moves[socket.id] = 0;
 			moves[game[socket.id]] = 1;
@@ -235,46 +235,90 @@ io.on('connection', function(socket){
 		}
 
 		if (chellenges[chellenges[socket.id]] == socket.id) {
-			io.to(chellenges[socket.id]).emit('chellengeCancelled');
-			io.to(chellenges[socket.id]).emit('chellengeDenied');
+			io.to(chellenges[socket.id]).emit('chellengerDisconnected');
+
+			chellenges.splice(chellenges[socket.id], 1);
+			chellenges.splice(socket.id, 1);
 		}
 	});
 
 	//after typing nick it chooses the opponent
 	socket.on('chooseOpponent', function(nick) {
-		console.log(nicks[socket.id] + ' has chellenged ' + nick);
 		var found = 'notFound';
+		var opponentIndex;
 
 		if (nick == nicks[socket.id]) {
-			console.log('cant play with yourself  ' + found);
 			found = 'choseHimself';
 		}
 		else {
 			for (var i = 0; i < userCount && found == 'notFound'; i++) {
 				if (nicks[allUsers[i]] == nick) {
-					chellenges[socket.id] = allUsers[i];
-					chellenges[allUsers[i]] = socket.id;
+					opponentIndex = i;
+					if (game[game[allUsers[i]]] == allUsers[i]) {
+						found = 'opponentInGame'
+					}
+					else {
+						for (var j = 0; j < searchingUsersCount; j++) {
+							if (searchingUsers[j] == socket.id) {
+								found = 'opponentIsSearching'
+							}
+						}
 
-					io.to(allUsers[i]).emit('chellengeForYou', nicks[socket.id]);
-					io.to(socket.id).emit('waitingForAnswer', nicks[allUsers[i]]);
-					found = 'waitingForAnswer';
+						if (found == 'notFound') found = 'waitingForAnswer';
+					}
 				}
 			}
 	
 		}
 
-		if (found != 'waitingForAnswer') {
-			if (found == 'notFound') console.log('Player not found!  ' + found);
-			
-			io.to(socket.id).emit('failedToChooseOpponent', found, nick);
+		if (found == 'opponentInGame') { //if chellenged player is already in game
+			io.to(socket.id).emit('chellengedOpponentIsInGame', nick);
 		}
-	})
+		else if (found == 'waitingForAnswer' || found == 'opponentIsSearching') {
+			chellenges[socket.id] = allUsers[opponentIndex];
+			chellenges[allUsers[opponentIndex]] = socket.id;
 
-	//when opponent accepts your chellenge
+			if (found == 'opponentIsSearching') {
+				for (var j = 0; j < searchingUsersCount && searchingUsers[j] != allUsers[opponentIndex]; i++);
+				searchingUsers.splice(j,1);
+				searchingUsersCount--;
+			}
+
+			io.to(allUsers[opponentIndex]).emit('chellengeForYou', nicks[socket.id], found);
+			io.to(socket.id).emit('waitingForAnswer', nicks[allUsers[opponentIndex]]);
+		}
+		else if (found == 'choseHimself') {
+			io.to(socket.id).emit('chellengedYourself');
+		}
+		else if (found == 'notFound') {
+			io.to(socket.id).emit('chellengedPlayerDoesNotExist', nick)
+		}
+	});
+	
+	socket.on('chellengeCancelled', function() {
+		io.to(chellenges[socket.id]).emit('chellengeCancelled');
+
+		chellenges.splice(chellenges[socket.id], 1);
+		chellenges.splice(socket.id, 1);
+	});
+
+	socket.on('chellengeDenied', function() {
+		io.to(chellenges[socket.id]).emit('chellengeDenied');
+
+		chellenges.splice(chellenges[socket.id], 1);
+		chellenges.splice(socket.id, 1);
+	});
+
 	socket.on('chellengeAccepted', function() {
-		console.log(chellenges[chellenges[socket.id]] + ' has accepted the chellenge of ' + chellenges[socket.id] + ' == starting game between them');
+		io.to(chellenges[socket.id]).emit('chellengeAccepted');
+
+		//pair them
 		game[socket.id] = chellenges[socket.id];
-		game[game[socket.id]] = chellenges[chellenges[socket.id]];
+		game[chellenges[socket.id]] = socket.id;
+
+		//delete from searching users
+		chellenges.splice(chellenges[socket.id], 1);
+		chellenges.splice(socket.id, 1);
 
 		//randomizing who is x and who is o
 		xo[socket.id] = Math.floor(Math.random() * 2);
@@ -290,28 +334,6 @@ io.on('connection', function(socket){
 
 		io.to(socket.id).emit('moveInfo', nicks[game[socket.id]], xo[socket.id]);
 		io.to(game[socket.id]).emit('moveInfo', nicks[socket.id], xo[game[socket.id]]);
-
-		chellenges.splice(chellenges[socket.id], 1);
-		chellenges.splice(socket.id, 1);
-	});
-
-	//when the chellenge is denied
-	socket.on('chellengeDenied', function() {
-		console.log(chellenges[chellenges[socket.id]] + ' (' + nicks[chellenges[chellenges[socket.id]]] + ') has declined the chellenge from ' + chellenges[socket.id] + ' (' + nicks[chellenges[socket.id]] + ')');
-		io.to(chellenges[socket.id]).emit('chellengeDenied', nicks[socket.id]);
-
-
-		chellenges.splice(chellenges[socket.id], 1);
-		chellenges.splice(socket.id, 1);
-	});
-
-	socket.on('chellengeCancelled', function() {
-		console.log(nicks[socket.id] + ' has cancelled the chellenge against ' + nicks[chellenges[socket.id]]);
-
-		io.to(chellenges[socket.id]).emit('chellengeCancelled');
-
-		chellenges.splice(chellenges[socket.id], 1);
-		chellenges.splice(socket.id, 1);
 	});
 });
 //=================================================================================

@@ -2,6 +2,20 @@ var counter = 0, startTime, endTime, flow = 0, menu = 1, cancel = 0;
 var visited = [1,1,1,1,1,1,1,1,1];
 var intervalID = window.setInterval(timerCheck, 1000);
 
+var leftMenuStatusEnum = {
+    HIDDEN: 0,
+    QUICKPLAY: 1,
+    INGAME: 2,
+    SEARCHING: 3,
+    WAITINGFORANSWER: 4, 
+    CHELLENGED: 5, 
+    CHELLENGEDPLAYERINGAME: 6,
+    CHELLENGEDYOURSELF: 7,
+    NOTFOUND: 8,
+};
+
+var leftMenuStatus = leftMenuStatusEnum.HIDDEN;
+
 var socket = io();
 
 //listening to the server-------
@@ -77,56 +91,81 @@ socket.on('renderActivePlayers', function(nicks, userCount) {
     }
 });
 
-socket.on('failedToChooseOpponent', function(found, nick) {
-    document.getElementById('quickPlay').classList = 'hidden';
-    document.getElementById('opponentNick').classList = 'hidden';
-    document.getElementById('chooseOpponent').classList = 'hidden';
+socket.on('chellengedOpponentIsInGame', function(nick) {
+    leftMenu('hide');
 
-    
-    if (found == 'notFound') {
-        document.getElementById('failedOpponentSearch').classList = 'searchOpponent';
-        document.getElementById('failedOpponentSearchText').innerHTML = nick + ' is not online';
-    }
-    else if (found == 'choseHimself') {
-        document.getElementById('failedOpponentSearch').classList = 'searchOpponent';
-        document.getElementById('failedOpponentSearchText').innerHTML = 'Its you!'
-    }
-    else if (found == 'waitingForAnswer') {
-        document.getElementById('awaitingAnswer').classList = 'searchOpponent';
-        document.getElementById('awaitingAnswerText').innerHTML = 'Awaiting answer from ' + nick;
-    }
-});
+    leftMenuStatus = leftMenuStatusEnum.CHELLENGEDPLAYERINGAME;
 
-socket.on('chellengeForYou', function(nick) {
-    console.log('You are chellenged ' + nick);
-    
-    document.getElementById('quickPlay').classList = 'hidden';
-    document.getElementById('opponentNick').classList = 'hidden';
-    document.getElementById('chooseOpponent').classList = 'hidden';
-
-    document.getElementById('upcomingChellenge').classList = 'searchOpponent';
-    document.getElementById('upcomingChellengeText').innerHTML = nick + ' has chellenged you!';
-});
-
-socket.on('chellengeDenied', function(nick) { 
-    returnLeftMenu();
-
-    document.getElementById('awaitingAnswer').classList = 'hidden';
+    document.getElementById('opponentInGame').classList = 'searchOpponent';
+    document.getElementById('opponentInGameText').innerHTML = nick + ' is in game';
 });
 
 socket.on('waitingForAnswer', function(nick) {
-    document.getElementById('quickPlay').classList = 'hidden';
-    document.getElementById('opponentNick').classList = 'hidden';
-    document.getElementById('chooseOpponent').classList = 'hidden';
+    leftMenu('hide');
+
+    leftMenuStatus = leftMenuStatusEnum.WAITINGFORANSWER;
 
     document.getElementById('awaitingAnswer').classList = 'searchOpponent';
-    document.getElementById('awaitingAnswerText').innerHTML = 'Waiting for anwer from ' + nick;
+    document.getElementById('awaitingAnswerText').innerHTML = 'Waiting for answer from' + nick;
+});
+
+socket.on('chellengeForYou', function(nick, found) {
+    if (found == 'opponentIsSearching') {
+        document.getElementById('cancelSearch').classList = 'hidden';
+    } 
+    else {
+        leftMenu('hide');
+    }
+
+    leftMenuStatus = leftMenuStatusEnum.CHELLENGED;
+
+    document.getElementById('upcomingChellenge').classList = 'searchOpponent';
+    document.getElementById('upcomingChellengeText').innerHTML = nick + ' has chellenged you';
+});
+
+socket.on('chellengerDisconnected', function() {
+    if (leftMenuStatus == leftMenuStatusEnum.CHELLENGED) {
+        document.getElementById('upcomingChellenge').classList = 'hidden';
+    }
+    else if (leftMenuStatus == leftMenuStatusEnum.WAITINGFORANSWER) {
+        document.getElementById('awaitingAnswer').classList = 'hidden';
+    }
+
+    leftMenu('return');
 });
 
 socket.on('chellengeCancelled', function() {
-    returnLeftMenu();
-
     document.getElementById('upcomingChellenge').classList = 'hidden';
+
+    leftMenu('return');
+});
+
+socket.on('chellengeDenied', function() {
+    document.getElementById('awaitingAnswer').classList = 'hidden';
+
+    leftMenu('return');
+});
+
+socket.on('chellengeAccepted', function() {
+    document.getElementById('awaitingAnswer').classList = 'hidden';
+});
+
+socket.on('chellengedYourself', function() {
+    leftMenu('hide');
+
+    leftMenuStatus = leftMenuStatusEnum.CHELLENGEDYOURSELF;
+
+    document.getElementById('opponentInGame').classList = 'searchOpponent';
+    document.getElementById('opponentInGameText').innerHTML = 'Cannot play with yourself';
+});
+
+socket.on('chellengedPlayerDoesNotExist', function(nick) {
+    leftMenu('hide');
+
+    leftMenuStatus = leftMenuStatusEnum.NOTFOUND;
+
+    document.getElementById('opponentInGame').classList = 'searchOpponent';
+    document.getElementById('opponentInGameText').innerHTML = 'Player "' + nick + '" not found';
 });
 //-------------------------------
 
@@ -165,46 +204,47 @@ document.getElementById('nick').addEventListener("keypress", function(event) {
 document.getElementById('opponentNickInput').addEventListener('keypress', function(event) {
     if (event.key == 'Enter') {
         socket.emit('chooseOpponent', document.getElementById('opponentNickInput').value);
+        document.getElementById('opponentNickInput').value = '';
     }
 });
 
 document.getElementById('chooseOpponentButton').addEventListener('click', function(event) {
     socket.emit('chooseOpponent', document.getElementById('opponentNickInput').value);
+    document.getElementById('opponentNickInput').value = '';
 });
 
 document.getElementById('openPlayersMenuButton').addEventListener('click', function() {
-    if (document.getElementById('playersList').className == 'hidden')document.getElementById('playersList').className = 'playersList';
+    if (document.getElementById('playersList').className == 'hidden') document.getElementById('playersList').className = 'playersList';
     else document.getElementById('playersList').className = 'hidden';
 });
 
-document.getElementById('failedOpponentSearchButton').addEventListener('click', function() {
-    returnLeftMenu();
+document.getElementById('opponentInGameButton').addEventListener('click', function() {
+    document.getElementById('opponentInGame').classList = 'hidden';
 
-    document.getElementById('failedOpponentSearch').classList = 'hidden';
+    leftMenu('return');
 });
 
-document.getElementById('upcomingChellengeButtonAccept').addEventListener('click', function() {
-    returnLeftMenu();
+document.getElementById('awaitingAnswerButton').addEventListener('click', function() {
+    document.getElementById('awaitingAnswer').classList = 'hidden';
 
-    document.getElementById('upcomingChellenge').classList = 'hidden';
+    leftMenu('return');
 
-    socket.emit('chellengeAccepted');
+    socket.emit('chellengeCancelled');
 });
 
 document.getElementById('upcomingChellengeButtonDenied').addEventListener('click', function() {
-    returnLeftMenu();
-
     document.getElementById('upcomingChellenge').classList = 'hidden';
+
+    leftMenu('return');
 
     socket.emit('chellengeDenied');
 });
 
-document.getElementById('awaitingAnswerButton').addEventListener('click', function() {
-    returnLeftMenu();
-    document.getElementById('awaitingAnswer').classList = 'hidden';
+document.getElementById('upcomingChellengeButtonAccept').addEventListener('click', function() {
+    document.getElementById('upcomingChellenge').classList = 'hidden';
 
-    socket.emit('chellengeCancelled');
-}); 
+    socket.emit('chellengeAccepted');
+});
 //-------------------------------------------------------------------------------------
 
 
@@ -346,7 +386,7 @@ function newGame(opponent) {
     document.getElementById('cancelMenu').classList = 'cancel';
     document.getElementById('opponentNickInfo').innerHTML = 'Your opponent ' + opponent;
     
-
+    leftMenuStatus = leftMenuStatusEnum.INGAME;
     start();
 }
 //--------------------------------------------------------------
@@ -395,8 +435,9 @@ function endGame(won, xo) { //main function when game ends properly
     else if ((won == 1 && xo == 0) || (won == 2 && xo == 1)) youLost(); // if you lose
     else alert("error");
 
-    document.getElementById('cancel').classList = 'hidden';
     document.getElementById('newGameMenu').classList = 'newGameMenu';
+    document.getElementById('cancelMenu').classList = 'hidden';
+    leftMenu('return');
 
     socket.emit('endGame');
 }
@@ -418,6 +459,7 @@ function reset(i) { // when someone decides to cancel the game
         visited[i] = 1;
     }
 
+    leftMenuStatus = leftMenuStatusEnum.QUICKPLAY;
     socket.emit('endGame');
 }
 
@@ -427,6 +469,8 @@ function cancelSearch() {
     document.getElementById('newGameMenu').classList = 'newGameMenu';
     document.getElementById('message').classList = 'hidden';
     document.getElementById('cancelSearch').classList = 'hidden';
+
+    leftMenuStatus = leftMenuStatusEnum.QUICKPLAY;
 }
 
 function searching() {
@@ -434,11 +478,23 @@ function searching() {
     document.getElementById('cancelSearch').classList = 'cancel';
     document.getElementById('message').classList = 'message';
     document.getElementById('messageText').innerHTML = "Searching";
+
+    leftMenuStatus = leftMenuStatusEnum.SEARCHING;
 }
 
-function returnLeftMenu() {
-    document.getElementById('quickPlay').classList = 'quickPlay';
-    document.getElementById('opponentNick').classList = 'opponentNick';
-    document.getElementById('chooseOpponent').classList = 'chooseOpponent';
+function leftMenu(action) {
+    if (action == 'return') {
+        leftMenuStatus = 'quickPlay';
+        document.getElementById('quickPlay').classList = 'quickPlay';
+        document.getElementById('opponentNick').classList = 'opponentNick';
+        document.getElementById('chooseOpponent').classList = 'chooseOpponent';
+
+        leftMenuStatus = leftMenuStatusEnum.QUICKPLAY;
+    }
+    else if (action == 'hide') {
+        document.getElementById('quickPlay').classList = 'hidden';
+        document.getElementById('opponentNick').classList = 'hidden';
+        document.getElementById('chooseOpponent').classList = 'hidden';
+    }
 }
 //-----------------------------------------------------------------------
