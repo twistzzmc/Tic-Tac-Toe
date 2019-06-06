@@ -1,6 +1,7 @@
 @import 'leftMenu.css';
 @import 'nickMenu.css';
 @import 'gameField.css';
+@import 'playersMenu.css';
 
 /*main css bodys and container to keep order*/
 html {

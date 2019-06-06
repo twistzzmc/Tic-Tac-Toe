@@ -13,16 +13,8 @@ socket.on('move', function(msg, xo) {
     move(msg, xo);
 });
 
-socket.on('newGame', function() {
-    newGame();
-});
-
-socket.on('nickTaken', function(nick) {
-    nickTaken(nick);
-});
-
-socket.on('newPlayer', function(nick) {
-    newPlayer(nick);
+socket.on('newGame', function(opponent) {
+    newGame(opponent);
 });
 
 socket.on('opponentLeft', function() {
@@ -40,6 +32,102 @@ socket.on('cancelSearch', function() {
 socket.on('checkMove', function(i) {
     checkMove(i);
 });
+
+socket.on('connectionResize', function() {
+    document.getElementById("playingField").style.height = document.getElementById("playingField").clientWidth + "px";
+});
+
+socket.on('nick', function(nick, status) {
+    badNick(nick, status);
+});
+
+socket.on('newPlayer', function(nick) {
+    newPlayer(nick);
+});
+
+socket.on('moveInfo', function(nick, xo) {
+    if (xo == 1) document.getElementById('whoIsMoving').innerHTML = 'You are moving';
+    else document.getElementById('whoIsMoving').innerHTML = nick + ' is moving';
+});
+
+socket.on('renderActivePlayers', function(nicks, userCount) {
+    console.log(nicks);
+    document.getElementById('playersList').innerHTML = '';
+
+    for (var i = 0; i < userCount; i++) {
+        var playerBox = document.createElement("div");
+        var playerStatus = document.createElement("div");
+        var shiny = document.createElement("div");
+        var player = document.createElement("div");
+        var playerNick = document.createElement("p");
+
+        playerStatus.appendChild(shiny);
+        player.appendChild(playerNick);
+        playerBox.appendChild(playerStatus);
+        playerBox.appendChild(player);
+
+        document.getElementById('playersList').appendChild(playerBox);
+
+        playerStatus.classList = 'playerStatus';
+        player.classList = 'player';
+        playerBox.classList = 'playerBox';
+        shiny.classList = 'shiny';
+        playerNick.classList = 'playerNick';
+        playerNick.innerHTML = nicks[i];
+    }
+});
+
+socket.on('failedToChooseOpponent', function(found, nick) {
+    document.getElementById('quickPlay').classList = 'hidden';
+    document.getElementById('opponentNick').classList = 'hidden';
+    document.getElementById('chooseOpponent').classList = 'hidden';
+
+    
+    if (found == 'notFound') {
+        document.getElementById('failedOpponentSearch').classList = 'searchOpponent';
+        document.getElementById('failedOpponentSearchText').innerHTML = nick + ' is not online';
+    }
+    else if (found == 'choseHimself') {
+        document.getElementById('failedOpponentSearch').classList = 'searchOpponent';
+        document.getElementById('failedOpponentSearchText').innerHTML = 'Its you!'
+    }
+    else if (found == 'waitingForAnswer') {
+        document.getElementById('awaitingAnswer').classList = 'searchOpponent';
+        document.getElementById('awaitingAnswerText').innerHTML = 'Awaiting answer from ' + nick;
+    }
+});
+
+socket.on('chellengeForYou', function(nick) {
+    console.log('You are chellenged ' + nick);
+    
+    document.getElementById('quickPlay').classList = 'hidden';
+    document.getElementById('opponentNick').classList = 'hidden';
+    document.getElementById('chooseOpponent').classList = 'hidden';
+
+    document.getElementById('upcomingChellenge').classList = 'searchOpponent';
+    document.getElementById('upcomingChellengeText').innerHTML = nick + ' has chellenged you!';
+});
+
+socket.on('chellengeDenied', function(nick) { 
+    returnLeftMenu();
+
+    document.getElementById('awaitingAnswer').classList = 'hidden';
+});
+
+socket.on('waitingForAnswer', function(nick) {
+    document.getElementById('quickPlay').classList = 'hidden';
+    document.getElementById('opponentNick').classList = 'hidden';
+    document.getElementById('chooseOpponent').classList = 'hidden';
+
+    document.getElementById('awaitingAnswer').classList = 'searchOpponent';
+    document.getElementById('awaitingAnswerText').innerHTML = 'Waiting for anwer from ' + nick;
+});
+
+socket.on('chellengeCancelled', function() {
+    returnLeftMenu();
+
+    document.getElementById('upcomingChellenge').classList = 'hidden';
+});
 //-------------------------------
 
 //emitting to the server if the user clicks on something that concerns other users--
@@ -52,7 +140,7 @@ Array.from(document.getElementsByClassName("emptySquare")).forEach(function(elem
     });
 })
 
-document.getElementById('cancel').addEventListener("click", function(event) {
+document.getElementById('cancelButton').addEventListener("click", function(event) {
     socket.emit('cancel');
 });
 
@@ -67,6 +155,56 @@ document.getElementById("quickPlayText").addEventListener("click", function(even
 document.getElementById('enterNickButton').addEventListener("click", function(event) {
         socket.emit('enteredNick', document.getElementById('nick').value);
 });
+
+document.getElementById('nick').addEventListener("keypress", function(event) {
+    if (event.key == 'Enter') {
+        socket.emit('enteredNick', document.getElementById('nick').value);
+    }
+});
+
+document.getElementById('opponentNickInput').addEventListener('keypress', function(event) {
+    if (event.key == 'Enter') {
+        socket.emit('chooseOpponent', document.getElementById('opponentNickInput').value);
+    }
+});
+
+document.getElementById('chooseOpponentButton').addEventListener('click', function(event) {
+    socket.emit('chooseOpponent', document.getElementById('opponentNickInput').value);
+});
+
+document.getElementById('openPlayersMenuButton').addEventListener('click', function() {
+    if (document.getElementById('playersList').className == 'hidden')document.getElementById('playersList').className = 'playersList';
+    else document.getElementById('playersList').className = 'hidden';
+});
+
+document.getElementById('failedOpponentSearchButton').addEventListener('click', function() {
+    returnLeftMenu();
+
+    document.getElementById('failedOpponentSearch').classList = 'hidden';
+});
+
+document.getElementById('upcomingChellengeButtonAccept').addEventListener('click', function() {
+    returnLeftMenu();
+
+    document.getElementById('upcomingChellenge').classList = 'hidden';
+
+    socket.emit('chellengeAccepted');
+});
+
+document.getElementById('upcomingChellengeButtonDenied').addEventListener('click', function() {
+    returnLeftMenu();
+
+    document.getElementById('upcomingChellenge').classList = 'hidden';
+
+    socket.emit('chellengeDenied');
+});
+
+document.getElementById('awaitingAnswerButton').addEventListener('click', function() {
+    returnLeftMenu();
+    document.getElementById('awaitingAnswer').classList = 'hidden';
+
+    socket.emit('chellengeCancelled');
+}); 
 //-------------------------------------------------------------------------------------
 
 
@@ -101,11 +239,20 @@ function newPlayer(nick) {
     document.getElementById("seconds").innerText = "seconds";
 }
 
-function nickTaken(nick) {
-    console.log("Nick '" + nick + "' is taken");
-
+function badNick(nick, status) {
     document.getElementsByName('nick')[0].value="";
-    document.getElementsByName('nick')[0].placeholder="Nick taken";
+    if (status == 0) {
+        console.log("Nick '" + nick + "' is taken");
+        document.getElementsByName('nick')[0].placeholder="Nick taken";
+    }
+    else if (status == 1) {
+        console.log("Nick '" + nick + "' is too short");
+        document.getElementsByName('nick')[0].placeholder="Too short";
+    }
+    else if (status == 2) {
+        console.log("Nick '" + nick + "' has illegal characters");
+        document.getElementsByName('nick')[0].placeholder="Illegal char";
+    }
 }
 
 //when player puts x or o
@@ -183,7 +330,7 @@ function end() {
 //--------------------------
 
 //when a player decides he want to play (hits play button)
-function newGame() {
+function newGame(opponent) {
 
     console.log("new game");
     for (var i = 1; i <= 9; i++){
@@ -193,13 +340,12 @@ function newGame() {
     }
     counter = 0;
 
-    document.getElementById("draw").classList = "hidden";
-    document.getElementById('searchingMiddle').classList = 'hidden';
+    document.getElementById('newGameMenu').classList = 'hidden';
+    document.getElementById('message').classList = 'hidden'
     document.getElementById('cancelSearch').classList = 'hidden';
-    document.getElementById('cancel').classList = 'cancel';
-
-    document.getElementById("youLost").classList = "hidden";
-    document.getElementById("youWon").classList = "hidden";
+    document.getElementById('cancelMenu').classList = 'cancel';
+    document.getElementById('opponentNickInfo').innerHTML = 'Your opponent ' + opponent;
+    
 
     start();
 }
@@ -207,7 +353,8 @@ function newGame() {
 
 //function for when the game ends one way or another------------
 function draw() {
-    document.getElementById("draw").classList = "message";
+    document.getElementById('message').classList = 'message';
+    document.getElementById("messageText").innerHTML = "draw";
 }
 
 function youWon() {
@@ -215,7 +362,8 @@ function youWon() {
         visited[i] = 1;
     }
 
-    document.getElementById("youWon").classList = "message";
+    document.getElementById('message').classList = 'message';
+    document.getElementById("messageText").innerHTML = "You won";
 }
 
 function youLost() {
@@ -223,7 +371,8 @@ function youLost() {
         visited[i] = 1;
     }
 
-    document.getElementById("youLost").classList = "message";
+    document.getElementById('message').classList = 'message';
+    document.getElementById("messageText").innerHTML = "You lost";
 }
 
 function timer() {
@@ -257,11 +406,13 @@ function reset(i) { // when someone decides to cancel the game
     flow = 0;
     timer();
 
-    document.getElementById('cancel').classList = 'hidden';
+    document.getElementById('message').classList = 'message';
     document.getElementById('newGameMenu').classList = 'newGameMenu';
 
-    if (i == 1) document.getElementById("youCancelled").classList = "message";
-    else if (i == 0) document.getElementById("cancelled").classList = "message";
+    document.getElementById('cancelMenu').classList = 'hidden';
+
+    if (i == 1) document.getElementById("messageText").innerHTML = "You left";
+    else if (i == 0) document.getElementById("messageText").innerHTML = "Opponent left";
 
     for (var i = 0; i < 9; i++) {
         visited[i] = 1;
@@ -272,17 +423,22 @@ function reset(i) { // when someone decides to cancel the game
 
 function cancelSearch() {
     console.log("canceling search");
-    document.getElementById('searchingMiddle').classList = 'hidden';
-    document.getElementById('cancelSearch').classList = 'hidden';
+
     document.getElementById('newGameMenu').classList = 'newGameMenu';
+    document.getElementById('message').classList = 'hidden';
+    document.getElementById('cancelSearch').classList = 'hidden';
 }
 
 function searching() {
     document.getElementById('newGameMenu').classList = 'hidden';
     document.getElementById('cancelSearch').classList = 'cancel';
-    document.getElementById('searchingMiddle').classList = 'message';
-    document.getElementById("cancelled").classList = "hidden";
-    document.getElementById("youLost").classList = "hidden";
-    document.getElementById("youWon").classList = "hidden";
+    document.getElementById('message').classList = 'message';
+    document.getElementById('messageText').innerHTML = "Searching";
+}
+
+function returnLeftMenu() {
+    document.getElementById('quickPlay').classList = 'quickPlay';
+    document.getElementById('opponentNick').classList = 'opponentNick';
+    document.getElementById('chooseOpponent').classList = 'chooseOpponent';
 }
 //-----------------------------------------------------------------------

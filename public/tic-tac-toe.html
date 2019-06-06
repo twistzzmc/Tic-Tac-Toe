@@ -2,9 +2,11 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Tic-Tac-Toe</title>
         <link href="https://fonts.googleapis.com/css?family=Indie+Flower" rel="stylesheet">
         <link rel="stylesheet" href="public/css/main.css">
+        <!-- <link rel="stylesheet" href="css/main.css"> -->
         <!-- <link rel="stylesheet" href="tic-tac-toeStyles.css"> -->
     </head>
     
@@ -13,7 +15,7 @@
             <div class="gameName">Tic Tac Toe</div>
 
             <div class="nickPlace" id="nickPlace">
-                <input class="nick" id="nick" placeholder="Nick" name="nick">
+                <input class="nick" id="nick" placeholder="Nick" name="nick" maxlength="8" autocomplete="off">
             </div>
                     
             <div class="enterNick" id="enterNick">
@@ -41,15 +43,40 @@
                     <div class="chooseOpponent" id="chooseOpponent">
                         <button class="chooseOpponentButton" id="chooseOpponentButton">Choose Opponent</button>
                     </div>
+
+                    <div class="hidden" id="failedOpponentSearch">
+                        <div class="searchOpponentText" id="failedOpponentSearchText"></div>
+                        <button class="searchOpponentButton" id="failedOpponentSearchButton">Cancel</button>
+                    </div>
+
+                    <div class="hidden" id="upcomingChellenge">
+                        <div class="searchOpponentText" id="upcomingChellengeText"></div>
+                        <button class="searchOpponentButton" id="upcomingChellengeButtonAccept">Accept</button>
+                        <button class="searchOpponentButton" id="upcomingChellengeButtonDenied">Deny</button>
+                    </div>
+
+                    <div class="hidden" id="awaitingAnswer">
+                        <div class="searchOpponentText" id="awaitingAnswerText"></div>
+                        <button class="searchOpponentButton" id="awaitingAnswerButton">Cancel</button>
+                    </div>
                 </div>
 
                 <div class="hidden" id="cancelSearch">
                         <button class="cancelSearchButton" id="cancelSearchButton">Cancel search</button>
                 </div>
 
-                <div class="hidden" id="cancel">
+                <div class="hidden" id="cancelMenu">
+                    <div class="menuInfo" id="opponentNickInfo">
+                        bylejakiecos
+                    </div> 
+    
                     <button class="cancelButton" id="cancelButton">Cancel</button>
+    
+                    <div class="menuInfo" id="whoIsMoving">
+                        
+                    </div>
                 </div>
+
                 
                 <div class="timer" id="timer">
                     <div class="timerText" id="timerText"></div>
@@ -92,35 +119,33 @@
                         <div class="line"></div>
                         <div class="emptySquare" id="empty9" data-index="9"></div>
                     </div>
-                    
-                    <div class="hidden" id="draw">
-                        <p class="messageText">Draw<p/>
-                    </div>
 
-                    <div class="hidden" id="searchingMiddle">
-                        <p class="messageText">Searching</p>
-                    </div>
-
-                    <div class="hidden" id="cancelled">
-                        <p class="messageText">Opponent left</p>
-                    </div>
-
-                    <div class="hidden" id="youWon">
-                        <p class="messageText">You won</p>
-                    </div>
-
-                    <div class="hidden" id="youLost">
-                        <p class="messageText">You lost</p>
-                    </div>
-
-                    <div class="hidden" id="youCancelled">
-                        <p class="messageText">You left</p>
+                    <div class="hidden" id="message">
+                        <div class="messageText" id="messageText"></div>
                     </div>
                 </div>
                 <div class="bar"></div>
             </div>
+
+            <div class="players">
+                <div class="playersMenu" id="playersMenu">
+                    <div class="openPlayersMenuButton" id="openPlayersMenuButton">
+                        <div class="spacingForArrows"></div>
+                        <div class="arrowContainer">
+                            <div class="arrow" id="arrow1"></div>
+                            <div class="arrow" id="arrow2"></div>
+                            <div class="arrow" id="arrow3"></div>
+                        </div>
+                    </div>
+                    <div class="playersMenuText" id="playersMenuText">Players online</div>
+                </div>
+    
+                <div class="playersList" id="playersList"></div>
+                
+            </div>
         </div>
         <script src="/socket.io/socket.io.js"></script>
+        <!-- <script src="../node_modules/socket.io/lib/socket.js"></script> -->
         <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
         <script src="public/vue.js"></script>
         <!-- <script src="vue.js"></script> -->

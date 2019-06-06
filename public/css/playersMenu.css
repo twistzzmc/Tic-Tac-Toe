@@ -1,0 +1,172 @@
+div.players {
+    position: absolute;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+div.playersMenu {
+    position: relative;
+    /* right: 0; */
+    background-color: #466365;
+    width: 180px;
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+}
+
+div.openPlayersMenuButton {
+    background-color: #466365;
+    width: 45px;
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+}
+
+div.spacingForArrows {
+    background-color: #466365;
+    width: 10px;
+    height: 40px;
+}
+
+div.arrowContainer {
+    background-color: #466365;
+    height: 40px;
+    display: flex;
+    flex-direction: column;
+}
+
+.arrow {
+    position: absolute;
+    box-sizing: border-box;
+    height: 17px;
+    width: 17px;
+    border-style: solid;
+    border-color: #F2F2F2;
+    border-width: 0px 1px 1px 0px;
+    transform: rotate(45deg);
+    transition: border-width 100ms ease-in-out;
+}
+
+#arrow1 {
+    margin-top: 1px;
+}
+
+#arrow2 {
+    margin-top: 7px;
+}
+
+#arrow3 {
+    margin-top: 13px;
+}
+
+.openPlayersMenuButton:hover .arrow {
+    border-bottom-width: 2px;
+    border-right-width: 2px;
+}
+
+.spacingForArrows:hover .arrow {
+    border-bottom-width: 2px;
+    border-right-width: 2px;
+}
+
+div.playersMenuText {
+    background-color: #F2F2F2;
+    width: 165px;
+    height: 34px;
+    border-color: #466365;
+    font-size: 23px;
+    font-family: 'Indie Flower', cursive;
+    margin: auto;
+    border: 3px solid #466365;
+    border-left: #F2F2F2;
+    padding-left: 6px;
+    color: #466365;
+}
+
+div.playersList {
+    position: relative;
+    background-color: #F2F2F2;
+    width: 174px;
+    height: 300px;
+    border: 3px solid #466365;
+    border-top: #F2F2F2;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+div.playerBox {
+    /* background-color: aqua; */
+    position: relative;
+    width: 174px;
+    height: 30px;
+    display: flex;
+    flex-direction: row;
+}
+
+div.playerStatus {
+    position: relative;
+    /* background-color: blue; */
+    width: 34px;
+    height: 30px;
+    display: flex;
+}
+
+/* div.shiny {
+    position: relative;
+    margin: auto;
+    background-color: #17D802;
+    border-radius: 50%;
+    width: 12px;
+    height: 12px;
+    border: 2px solid rgb(70, 99, 101, 1);
+    /* box-shadow: 0 0 3px 1px #17D802; */
+    /* box-shadow: 0 0 100px, 0 0 2px, 0 0 1em #ff4444, 0 0 0.5em #ff4444, 0 0 0.1em #ff4444, 0 10px 3px #000;
+} */
+
+.shiny {
+    position: relative;
+    margin: auto;
+    background-color: #17D802;
+    border-radius: 50%;
+    width: 8px;
+    height: 8px;
+    font-size: 1.5em;
+    color: #17D802;
+    font-family: Iceland;
+    -webkit-animation: neon2 1.5s ease-in-out infinite alternate;
+    -moz-animation: neon2 1.5s ease-in-out infinite alternate;
+    animation: neon2 1.5s ease-in-out infinite alternate;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: top;
+}
+
+@-webkit-keyframes neon2 {
+    from {
+        box-shadow: 0 0 1px 2px rgba(23, 216, 2, 0.5), 0 0 5px rgb(23, 216, 2, 0.5), 0 0 7px rgb(23, 216, 2, 0.5), 0 0 9px rgb(23, 216, 2, 0.5), 0 0 11px rgb(23, 216, 2, 0.5), 0 0 12px rgb(23, 216, 2, 0.5), 0 0 13px rgb(23, 216, 2, 0.5), 0 0 15px rgb(23, 216, 2, 0.5);
+    }
+    to {
+        box-shadow: 0 0 1px 1px rgba(23, 216, 2, 0.5), 0 0 3px rgb(23, 216, 2, 0.5), 0 0 4px rgb(23, 216, 2, 0.5), 0 0 5px rgb(23, 216, 2, 0.5), 0 0 6px rgb(23, 216, 2, 0.5), 0 0 7px rgb(23, 216, 2, 0.5), 0 0 8px rgb(23, 216, 2, 0.5), 0 0 9px rgb(23, 216, 2, 0.5);
+    }
+}
+
+div.player {
+    position: relative;
+    background-color: bisque;
+    width: 140px;
+    height: 30px;
+    display: table;
+}
+
+.playerNick {
+    display: table-cell;
+    background-color: #F2F2F2;
+    font-size: 20px;
+    vertical-align: middle;
+    font-family: 'Indie Flower', cursive;
+    color: #466365;
+}

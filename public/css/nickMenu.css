@@ -1,11 +1,3 @@
-/* div.imgBackground {
-    position: absolute;
-    z-index: +1;
-    width: 100%;
-    height: 100%; 
-    background: url("../img/c13.jpg") no-repeat center center;
-} */
-
 div.gameName {
     position: relative;
     color: #466365;
@@ -13,6 +5,7 @@ div.gameName {
     text-align: center;
     font-family: 'Indie Flower', cursive;
     margin: auto;
+    font-weight: 600;
 }
 
 .gameName:hover {
@@ -93,6 +86,7 @@ div.nickPlace {
     border-radius: 7px;  
     font-family: 'Indie Flower', cursive;
     color: #466365;
+    padding-left: 7px;
 }
 
 .nick:focus {
